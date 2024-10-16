@@ -9,48 +9,8 @@ import {
   type AdvancedMarkerProps,
 } from '@vis.gl/react-google-maps';
 
-import { CongregacaoName, Privilegio, type Dianteira } from '~/infra/sheet';
-
-const colors: Record<
-  CongregacaoName,
-  { background: string; borderColor?: string; glyphColor?: string }
-> = {
-  [CongregacaoName.CENTRAL]: {
-    background: '#22ccff',
-    borderColor: '#1e89a1',
-    glyphColor: '#0f677a',
-  },
-  [CongregacaoName.JARDIM_INDAIA]: {
-    background: '#ffcc22',
-    borderColor: '#a1871e',
-    glyphColor: '#7a5f0f',
-  },
-  [CongregacaoName.LESTE]: {
-    background: '#22ffcc',
-    borderColor: '#1ea187',
-    glyphColor: '#0f7a5f',
-  },
-  [CongregacaoName.NORTE]: {
-    background: '#ff22cc',
-    borderColor: '#a11e89',
-    glyphColor: '#7a0f67',
-  },
-  [CongregacaoName.OESTE]: {
-    background: '#cccccc',
-    borderColor: '#888888',
-    glyphColor: '#555555',
-  },
-  [CongregacaoName.SUL]: {
-    background: '#ccff22',
-    borderColor: '#89a11e',
-    glyphColor: '#67a00f',
-  },
-  [CongregacaoName.TAPAJOS]: {
-    background: '#ff2222',
-    borderColor: '#a11e1e',
-    glyphColor: '#7a0f0f',
-  },
-};
+import { Privilegio, type Dianteira } from '~/infra/sheet';
+import { dianteiraDots } from '~/styles/map-colors';
 
 export const AdvancedMarkerWithRef = (
   props: AdvancedMarkerProps & {
@@ -105,7 +65,7 @@ export function DianteiraDots({ data }: { data: Array<Dianteira> }) {
           position={{ lat, lng }}
         >
           <Pin
-            background={colors[congregacaoAtual].background}
+            background={dianteiraDots[congregacaoAtual].background}
             borderColor={selectedId === key ? '#1e89a1' : null}
             glyphColor={selectedId === key ? '#0f677a' : null}
           >

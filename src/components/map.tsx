@@ -4,10 +4,13 @@ import React from 'react';
 
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 
-import type { Counter, Dianteira } from '~/infra/sheet';
+import { OldNewProvider } from '~/context/old-new';
+import type { Counter, Dianteira, Divisao } from '~/infra/sheet';
 
 import { Clusters } from './clusters';
 import { DianteiraDots } from './dianteira-dots';
+import { DivisaoTerritorio } from './divisao-territorio';
+import { Panel } from './panel';
 
 const containerStyle = {
   width: '100vw',
@@ -23,24 +26,30 @@ export function MyMap({
   mapApiKey,
   data,
   menData,
+  divisaoAtual,
 }: {
   mapApiKey: string;
   data: Array<Counter>;
   menData: Array<Dianteira>;
+  divisaoAtual: Divisao;
 }) {
   return (
     <APIProvider apiKey={mapApiKey}>
-      <Map
-        mapId={'bf51a910020fa25a'}
-        style={containerStyle}
-        defaultCenter={center}
-        defaultZoom={13}
-        gestureHandling={'greedy'}
-        disableDefaultUI
-      >
-        <Clusters data={data} />
-        <DianteiraDots data={menData} />
-      </Map>
+      <OldNewProvider>
+        <Map
+          mapId={'bf51a910020fa25a'}
+          style={containerStyle}
+          defaultCenter={center}
+          defaultZoom={13}
+          gestureHandling={'greedy'}
+          disableDefaultUI
+        >
+          <Clusters data={data} />
+          <DianteiraDots data={menData} />
+          <DivisaoTerritorio divisaoAtual={divisaoAtual} />
+        </Map>
+        <Panel />
+      </OldNewProvider>
     </APIProvider>
   );
 }
