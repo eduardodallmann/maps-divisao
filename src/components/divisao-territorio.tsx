@@ -1,6 +1,6 @@
 'use client';
 
-import { type CongregacaoName, type Divisao } from '~/infra/sheet';
+import type { CongregacaoName, Divisao } from '~/infra/types';
 import { polygonColors } from '~/styles/map-colors';
 
 import { Polygon } from './polygon';
