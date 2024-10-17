@@ -10,6 +10,7 @@ export type Dianteira = {
   value: string;
   congregacaoAtual: CongregacaoName;
   privilegio: Privilegio;
+  endereco: string;
   lat: number;
   lng: number;
 };
@@ -107,7 +108,7 @@ export async function getMenData() {
           congregacaoAtual,
           _congregacaoDestino,
           privilegio,
-          _endereco,
+          endereco,
           coordenadas,
         ]) => {
           const [lat, lng] = coordenadas.split(',').map(Number);
@@ -117,6 +118,7 @@ export async function getMenData() {
             privilegio,
             value: nome,
             congregacaoAtual,
+            endereco,
             lat,
             lng,
           };

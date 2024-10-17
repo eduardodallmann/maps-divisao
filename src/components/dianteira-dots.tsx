@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import {
   AdvancedMarker,
+  InfoWindow,
   Pin,
   useAdvancedMarkerRef,
   type AdvancedMarkerProps,
@@ -38,14 +39,35 @@ export const AdvancedMarkerWithRef = (
 export function DianteiraDots({ data }: { data: Array<Dianteira> }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [infoWindowShown, setInfoWindowShown] = useState(false);
+  const [selectedMarker, setSelectedMarker] =
+    useState<google.maps.marker.AdvancedMarkerElement | null>(null);
 
   const onMouseEnter = useCallback((id: string | null) => setHoverId(id), []);
   const onMouseLeave = useCallback(() => setHoverId(null), []);
   const onMarkerClick = useCallback(
-    (id: string | null, _marker?: google.maps.marker.AdvancedMarkerElement) => {
+    (id: string | null, marker?: google.maps.marker.AdvancedMarkerElement) => {
       setSelectedId(id);
+
+      if (marker) {
+        setSelectedMarker(marker);
+      }
+
+      if (id !== selectedId) {
+        setInfoWindowShown(true);
+      } else {
+        setInfoWindowShown((isShown) => !isShown);
+      }
     },
     [selectedId],
+  );
+  const handleInfowindowCloseClick = useCallback(
+    () => setInfoWindowShown(false),
+    [],
+  );
+  const getDianteira = useCallback(
+    (id: string) => data.find((d) => d.key === id),
+    [data],
   );
 
   return (
@@ -73,6 +95,17 @@ export function DianteiraDots({ data }: { data: Array<Dianteira> }) {
           </Pin>
         </AdvancedMarkerWithRef>
       ))}
+      {infoWindowShown && selectedMarker && (
+        <InfoWindow
+          anchor={selectedMarker}
+          onCloseClick={handleInfowindowCloseClick}
+        >
+          <h2>
+            {getDianteira(String(selectedId))?.privilegio}: {selectedId}
+          </h2>
+          <p>{getDianteira(String(selectedId))?.endereco}</p>
+        </InfoWindow>
+      )}
     </>
   );
 }
