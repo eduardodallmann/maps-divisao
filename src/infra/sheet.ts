@@ -1,39 +1,15 @@
-export type Counter = {
-  key: string;
-  value: number;
-  lat: number;
-  lng: number;
-};
+'use server';
 
-export type Dianteira = {
-  key: string;
-  value: string;
-  congregacaoAtual: CongregacaoName;
-  privilegio: Privilegio;
-  endereco: string;
-  lat: number;
-  lng: number;
-};
+import { google } from 'googleapis';
 
-export type Divisao = Record<
+import { authenticate } from './auth';
+import {
   CongregacaoName,
-  Array<{ lat: number; lng: number }>
->;
-
-export enum CongregacaoName {
-  JARDIM_INDAIA = 'Jardim Indaiá',
-  NORTE = 'Norte',
-  SUL = 'Sul',
-  LESTE = 'Leste',
-  OESTE = 'Oeste',
-  CENTRAL = 'Central',
-  TAPAJOS = 'Tapajós',
-}
-
-export enum Privilegio {
-  ANCIAO = 'Ancião',
-  SERVO = 'Servo',
-}
+  type Counter,
+  type Dianteira,
+  type Divisao,
+  type Privilegio,
+} from './types';
 
 export async function getStreetsData() {
   const apiKey = process.env.API_KEY;
@@ -51,12 +27,8 @@ export async function getStreetsData() {
 
     const dados: Array<Counter> = data.values
       .slice(1)
-      .filter(
-        ([rua, _bairro, _cidade, _cep, coordenadas, contagemCasas]) =>
-          Boolean(rua) && Boolean(coordenadas) && Boolean(contagemCasas),
-      )
       .map(([rua, _bairro, _cidade, _cep, coordenadas, contagemCasas]) => {
-        const [lat, lng] = coordenadas.split(',').map(Number);
+        const [lat = 0, lng = 0] = (coordenadas || ',').split(',').map(Number);
 
         return {
           key: rua,
@@ -185,4 +157,29 @@ export async function getDivisaoAtualData() {
 
     return dados;
   }
+}
+
+export async function writeStreetsCoordinates({
+  line,
+  value,
+}: {
+  line: string;
+  value: string;
+}) {
+  const auth = await authenticate();
+
+  //@ts-ignore
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const spreadsheetId = process.env.SPREADSHEET_ID;
+  const sheetName = 'Ruas';
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${sheetName}!E${line}`,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[value]],
+    },
+  });
 }

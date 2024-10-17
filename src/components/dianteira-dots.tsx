@@ -10,7 +10,7 @@ import {
   type AdvancedMarkerProps,
 } from '@vis.gl/react-google-maps';
 
-import { Privilegio, type Dianteira } from '~/infra/sheet';
+import { Privilegio, type Dianteira } from '~/infra/types';
 import { dianteiraDots } from '~/styles/map-colors';
 
 export const AdvancedMarkerWithRef = (

@@ -9,7 +9,7 @@ import {
 } from '@googlemaps/markerclusterer';
 import { useMap } from '@vis.gl/react-google-maps';
 
-import type { Counter } from '~/infra/sheet';
+import type { Counter } from '~/infra/types';
 
 import { MyMarker } from './marker';
 
@@ -56,15 +56,17 @@ export function Clusters({ data }: { data: Array<Counter> }) {
 
   return (
     <>
-      {data.map(({ key, lat, lng, value }) => (
-        <MyMarker
-          key={key}
-          keySent={String(key)}
-          position={{ lat, lng }}
-          value={value}
-          setMarkerRef={setMarkerRef}
-        />
-      ))}
+      {data
+        .filter(({ lat, lng }) => lat && lng)
+        .map(({ key, lat, lng, value }) => (
+          <MyMarker
+            key={key}
+            keySent={String(key)}
+            position={{ lat, lng }}
+            value={value}
+            setMarkerRef={setMarkerRef}
+          />
+        ))}
     </>
   );
 }

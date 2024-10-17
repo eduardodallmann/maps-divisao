@@ -5,7 +5,7 @@ import React from 'react';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 
 import { OldNewProvider } from '~/context/old-new';
-import type { Counter, Dianteira, Divisao } from '~/infra/sheet';
+import type { Counter, Dianteira, Divisao } from '~/infra/types';
 
 import { Clusters } from './clusters';
 import { DianteiraDots } from './dianteira-dots';

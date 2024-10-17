@@ -1,4 +1,4 @@
-import { CongregacaoName } from '~/infra/sheet';
+import { CongregacaoName } from '~/infra/types';
 
 export const dianteiraDots: Record<
   CongregacaoName,
