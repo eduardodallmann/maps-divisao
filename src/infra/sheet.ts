@@ -126,31 +126,41 @@ export async function getDivisaoData(versao: 'old' | 'new') {
       { cache: 'no-store' },
     );
     const data: {
-      values: Array<[string, string, string, string, string]>;
+      values: Array<[string, string, string, string, string, string, string]>;
     } = await response.json();
 
-    data.values.slice(1).forEach(([tapajos, central, sul, jardim, norte]) => {
-      if (tapajos) {
-        const [lng, lat] = tapajos.split(',').map(Number);
-        dados[CongregacaoName.TAPAJOS].push({ lat, lng });
-      }
-      if (central) {
-        const [lng, lat] = central.split(',').map(Number);
-        dados[CongregacaoName.CENTRAL].push({ lat, lng });
-      }
-      if (sul) {
-        const [lng, lat] = sul.split(',').map(Number);
-        dados[CongregacaoName.SUL].push({ lat, lng });
-      }
-      if (jardim) {
-        const [lng, lat] = jardim.split(',').map(Number);
-        dados[CongregacaoName.JARDIM_INDAIA].push({ lat, lng });
-      }
-      if (norte) {
-        const [lng, lat] = norte.split(',').map(Number);
-        dados[CongregacaoName.NORTE].push({ lat, lng });
-      }
-    });
+    data.values
+      .slice(1)
+      .forEach(([tapajos, central, sul, jardim, norte, leste, oeste]) => {
+        if (tapajos) {
+          const [lng, lat] = tapajos.split(',').map(Number);
+          dados[CongregacaoName.TAPAJOS].push({ lat, lng });
+        }
+        if (central) {
+          const [lng, lat] = central.split(',').map(Number);
+          dados[CongregacaoName.CENTRAL].push({ lat, lng });
+        }
+        if (sul) {
+          const [lng, lat] = sul.split(',').map(Number);
+          dados[CongregacaoName.SUL].push({ lat, lng });
+        }
+        if (jardim) {
+          const [lng, lat] = jardim.split(',').map(Number);
+          dados[CongregacaoName.JARDIM_INDAIA].push({ lat, lng });
+        }
+        if (norte) {
+          const [lng, lat] = norte.split(',').map(Number);
+          dados[CongregacaoName.NORTE].push({ lat, lng });
+        }
+        if (leste) {
+          const [lng, lat] = leste.split(',').map(Number);
+          dados[CongregacaoName.LESTE].push({ lat, lng });
+        }
+        if (oeste) {
+          const [lng, lat] = oeste.split(',').map(Number);
+          dados[CongregacaoName.OESTE].push({ lat, lng });
+        }
+      });
 
     return dados;
   } catch (error) {
