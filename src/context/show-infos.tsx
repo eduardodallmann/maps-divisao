@@ -27,8 +27,8 @@ type ShowInfosContextType = {
   divisaoNova: Divisao;
 
   somasPorPoligono: { [nome: string]: number };
-  anciaosPorCongregacao: { [nome: string]: number };
-  servosPorCongregacao: { [nome: string]: number };
+  anciaosPorCongregacao: { [nome: string]: Array<string> };
+  servosPorCongregacao: { [nome: string]: Array<string> };
 
   version: Version;
   setVersion: (show: Version) => void;
@@ -116,13 +116,21 @@ export const ShowInfosProvider = ({
   );
 
   const anciaosPorCongregacao = useMemo(() => {
-    const anciaos: { [nome: string]: number } = {};
+    const anciaos: { [nome: string]: Array<string> } = {};
 
-    for (const { congregacaoAtual, congregacaoNova, privilegio } of menData) {
+    for (const {
+      congregacaoAtual,
+      congregacaoNova,
+      privilegio,
+      key,
+    } of menData) {
       if (privilegio === 'Ancião') {
         const congregacao =
           version === 'old' ? congregacaoAtual : congregacaoNova;
-        anciaos[congregacao] = (anciaos[congregacao] || 0) + 1;
+        if (!anciaos[congregacao]) {
+          anciaos[congregacao] = [];
+        }
+        anciaos[congregacao].push(key);
       }
     }
 
@@ -130,13 +138,21 @@ export const ShowInfosProvider = ({
   }, [version]);
 
   const servosPorCongregacao = useMemo(() => {
-    const servos: { [nome: string]: number } = {};
+    const servos: { [nome: string]: Array<string> } = {};
 
-    for (const { congregacaoAtual, congregacaoNova, privilegio } of menData) {
+    for (const {
+      congregacaoAtual,
+      congregacaoNova,
+      privilegio,
+      key,
+    } of menData) {
       if (privilegio === 'Servo') {
         const congregacao =
           version === 'old' ? congregacaoAtual : congregacaoNova;
-        servos[congregacao] = (servos[congregacao] || 0) + 1;
+        if (!servos[congregacao]) {
+          servos[congregacao] = [];
+        }
+        servos[congregacao].push(key);
       }
     }
 

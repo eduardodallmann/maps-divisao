@@ -114,6 +114,10 @@ export function DianteiraDots() {
             {getDianteira(String(selectedId))?.privilegio}: {selectedId}
           </h2>
           <p>{getDianteira(String(selectedId))?.endereco}</p>
+          <p>
+            {getDianteira(String(selectedId))?.congregacaoAtual} {' > '}
+            {getDianteira(String(selectedId))?.congregacaoNova}
+          </p>
         </InfoWindow>
       )}
     </>

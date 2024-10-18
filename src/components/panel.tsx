@@ -2,6 +2,7 @@
 
 import { useShowInfos } from '~/hooks/use-show-infos';
 
+import { ReactPopover } from './common/popover';
 import { Toggle } from './common/toggle';
 
 export function Panel() {
@@ -42,22 +43,50 @@ export function Panel() {
       />
       Qnts por congregação:
       {somasPorPoligono && (
-        <div className="flex flex-col gap-2">
-          <div className="grid grid-cols-4">
-            <span>Congr.</span>
-            <span>Casas</span>
-            <span>Anc.</span>
-            <span>Ser.</span>
-          </div>
-          {Object.entries(somasPorPoligono).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-4">
-              <span>{key}:&nbsp;</span>
-              <span>{value}</span>
-              <span>{anciaosPorCongregacao[key]}</span>
-              <span>{servosPorCongregacao[key]}</span>
-            </div>
-          ))}
-        </div>
+        <table className="table-auto border-collapse">
+          <thead>
+            <tr>
+              <th className="border px-1 py-1">Congr.</th>
+              <th className="border px-1 py-1">Casas</th>
+              <th className="border px-1 py-1">Anc.</th>
+              <th className="border px-1 py-1">Ser.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(somasPorPoligono).map(([key, value]) => (
+              <tr key={key}>
+                <td className="border px-1 py-1">{key}</td>
+                <td className="border px-1 py-1">{value}</td>
+                <td className="border px-1 py-1">
+                  <ReactPopover
+                    content={
+                      <>
+                        {anciaosPorCongregacao[key]?.map((anc) => (
+                          <p key={anc}>{anc}</p>
+                        ))}
+                      </>
+                    }
+                  >
+                    {anciaosPorCongregacao[key]?.length}
+                  </ReactPopover>
+                </td>
+                <td className="border px-1 py-1">
+                  <ReactPopover
+                    content={
+                      <>
+                        {servosPorCongregacao[key]?.map((ser) => (
+                          <p key={ser}>{ser}</p>
+                        ))}
+                      </>
+                    }
+                  >
+                    {servosPorCongregacao[key]?.length}
+                  </ReactPopover>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
