@@ -13,6 +13,8 @@ export function Panel() {
     ruas,
     setRuas,
     somasPorPoligono,
+    anciaosPorCongregacao,
+    servosPorCongregacao,
   } = useShowInfos();
 
   return (
@@ -38,13 +40,21 @@ export function Panel() {
           setRuas(!ruas);
         }}
       />
-      Qnt de casas por território:
+      Qnts por congregação:
       {somasPorPoligono && (
         <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-4">
+            <span>Congr.</span>
+            <span>Casas</span>
+            <span>Anc.</span>
+            <span>Ser.</span>
+          </div>
           {Object.entries(somasPorPoligono).map(([key, value]) => (
-            <div key={key} className="flex justify-between">
-              <span>{key}</span>
+            <div key={key} className="grid grid-cols-4">
+              <span>{key}:&nbsp;</span>
               <span>{value}</span>
+              <span>{anciaosPorCongregacao[key]}</span>
+              <span>{servosPorCongregacao[key]}</span>
             </div>
           ))}
         </div>

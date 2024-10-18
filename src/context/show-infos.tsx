@@ -27,6 +27,8 @@ type ShowInfosContextType = {
   divisaoNova: Divisao;
 
   somasPorPoligono: { [nome: string]: number };
+  anciaosPorCongregacao: { [nome: string]: number };
+  servosPorCongregacao: { [nome: string]: number };
 
   version: Version;
   setVersion: (show: Version) => void;
@@ -113,6 +115,34 @@ export const ShowInfosProvider = ({
     [version],
   );
 
+  const anciaosPorCongregacao = useMemo(() => {
+    const anciaos: { [nome: string]: number } = {};
+
+    for (const { congregacaoAtual, congregacaoNova, privilegio } of menData) {
+      if (privilegio === 'Ancião') {
+        const congregacao =
+          version === 'old' ? congregacaoAtual : congregacaoNova;
+        anciaos[congregacao] = (anciaos[congregacao] || 0) + 1;
+      }
+    }
+
+    return anciaos;
+  }, [version]);
+
+  const servosPorCongregacao = useMemo(() => {
+    const servos: { [nome: string]: number } = {};
+
+    for (const { congregacaoAtual, congregacaoNova, privilegio } of menData) {
+      if (privilegio === 'Servo') {
+        const congregacao =
+          version === 'old' ? congregacaoAtual : congregacaoNova;
+        servos[congregacao] = (servos[congregacao] || 0) + 1;
+      }
+    }
+
+    return servos;
+  }, [version]);
+
   return (
     <ShowInfosContext.Provider
       value={{
@@ -131,6 +161,8 @@ export const ShowInfosProvider = ({
         divisaoNova,
 
         somasPorPoligono,
+        anciaosPorCongregacao,
+        servosPorCongregacao,
       }}
     >
       {children}
