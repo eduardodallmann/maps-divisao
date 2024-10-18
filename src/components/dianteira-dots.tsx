@@ -10,7 +10,8 @@ import {
   type AdvancedMarkerProps,
 } from '@vis.gl/react-google-maps';
 
-import { Privilegio, type Dianteira } from '~/infra/types';
+import { useShowInfos } from '~/hooks/use-show-infos';
+import { Privilegio } from '~/infra/types';
 import { dianteiraDots } from '~/styles/map-colors';
 
 export const AdvancedMarkerWithRef = (
@@ -36,7 +37,8 @@ export const AdvancedMarkerWithRef = (
   );
 };
 
-export function DianteiraDots({ data }: { data: Array<Dianteira> }) {
+export function DianteiraDots() {
+  const { menData } = useShowInfos();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [infoWindowShown, setInfoWindowShown] = useState(false);
@@ -66,13 +68,13 @@ export function DianteiraDots({ data }: { data: Array<Dianteira> }) {
     [],
   );
   const getDianteira = useCallback(
-    (id: string) => data.find((d) => d.key === id),
-    [data],
+    (id: string) => menData.find((d) => d.key === id),
+    [menData],
   );
 
   return (
     <>
-      {data.map(({ key, congregacaoAtual, privilegio, lat, lng }) => (
+      {menData.map(({ key, congregacaoAtual, privilegio, lat, lng }) => (
         <AdvancedMarkerWithRef
           onMarkerClick={(marker: google.maps.marker.AdvancedMarkerElement) =>
             onMarkerClick(key, marker)

@@ -9,11 +9,12 @@ import {
 } from '@googlemaps/markerclusterer';
 import { useMap } from '@vis.gl/react-google-maps';
 
-import type { Counter } from '~/infra/types';
+import { useShowInfos } from '~/hooks/use-show-infos';
 
 import { MyMarker } from './marker';
 
-export function Clusters({ data }: { data: Array<Counter> }) {
+export function Clusters() {
+  const { data } = useShowInfos();
   const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
   const map = useMap();
 
