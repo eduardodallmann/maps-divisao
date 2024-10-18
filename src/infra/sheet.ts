@@ -78,7 +78,7 @@ export async function getMenData() {
         ([
           nome,
           congregacaoAtual,
-          _congregacaoDestino,
+          congregacaoDestino,
           privilegio,
           endereco,
           coordenadas,
@@ -90,6 +90,7 @@ export async function getMenData() {
             privilegio,
             value: nome,
             congregacaoAtual,
+            congregacaoNova: congregacaoDestino,
             endereco,
             lat,
             lng,

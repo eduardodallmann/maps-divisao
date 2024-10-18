@@ -38,7 +38,7 @@ export const AdvancedMarkerWithRef = (
 };
 
 export function DianteiraDots() {
-  const { menData } = useShowInfos();
+  const { menData, version } = useShowInfos();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [infoWindowShown, setInfoWindowShown] = useState(false);
@@ -74,29 +74,37 @@ export function DianteiraDots() {
 
   return (
     <>
-      {menData.map(({ key, congregacaoAtual, privilegio, lat, lng }) => (
-        <AdvancedMarkerWithRef
-          onMarkerClick={(marker: google.maps.marker.AdvancedMarkerElement) =>
-            onMarkerClick(key, marker)
-          }
-          onMouseEnter={() => onMouseEnter(key)}
-          onMouseLeave={onMouseLeave}
-          key={key}
-          className="custom-marker"
-          style={{
-            transform: `scale(${[hoverId, selectedId].includes(key) ? 1.4 : 1})`,
-          }}
-          position={{ lat, lng }}
-        >
-          <Pin
-            background={dianteiraDots[congregacaoAtual].background}
-            borderColor={selectedId === key ? '#1e89a1' : null}
-            glyphColor={selectedId === key ? '#0f677a' : null}
+      {menData.map(
+        ({ key, congregacaoAtual, congregacaoNova, privilegio, lat, lng }) => (
+          <AdvancedMarkerWithRef
+            onMarkerClick={(marker: google.maps.marker.AdvancedMarkerElement) =>
+              onMarkerClick(key, marker)
+            }
+            onMouseEnter={() => onMouseEnter(key)}
+            onMouseLeave={onMouseLeave}
+            key={key}
+            className="custom-marker"
+            style={{
+              transform: `scale(${[hoverId, selectedId].includes(key) ? 1.4 : 1})`,
+            }}
+            position={{ lat, lng }}
           >
-            {privilegio === Privilegio.ANCIAO ? 'Anc' : 'Ser'}
-          </Pin>
-        </AdvancedMarkerWithRef>
-      ))}
+            {congregacaoAtual && congregacaoNova && (
+              <Pin
+                background={
+                  dianteiraDots[
+                    version === 'old' ? congregacaoAtual : congregacaoNova
+                  ].background
+                }
+                borderColor={selectedId === key ? '#1e89a1' : null}
+                glyphColor={selectedId === key ? '#0f677a' : null}
+              >
+                {privilegio === Privilegio.ANCIAO ? 'Anc' : 'Ser'}
+              </Pin>
+            )}
+          </AdvancedMarkerWithRef>
+        ),
+      )}
       {infoWindowShown && selectedMarker && (
         <InfoWindow
           anchor={selectedMarker}

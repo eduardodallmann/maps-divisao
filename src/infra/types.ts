@@ -9,6 +9,7 @@ export type Dianteira = {
   key: string;
   value: string;
   congregacaoAtual: CongregacaoName;
+  congregacaoNova: CongregacaoName;
   privilegio: Privilegio;
   endereco: string;
   lat: number;
