@@ -4,8 +4,11 @@ import {
   createContext,
   useMemo,
   useState,
+  type Dispatch,
   type PropsWithChildren,
+  type SetStateAction,
 } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import type { Counter, Dianteira, Divisao } from '~/infra/types';
 
@@ -25,10 +28,13 @@ type ShowInfosContextType = {
   menData: Array<Dianteira>;
   divisaoAtual: Divisao;
   divisaoNova: Divisao;
+  setDivisaoNova: Dispatch<SetStateAction<Divisao>>;
 
   somasPorPoligono: { [nome: string]: number };
   anciaosPorCongregacao: { [nome: string]: Array<string> };
   servosPorCongregacao: { [nome: string]: Array<string> };
+
+  editable: boolean;
 
   version: Version;
   setVersion: (show: Version) => void;
@@ -93,7 +99,7 @@ function somarValoresPorPoligono(
 export const ShowInfosProvider = ({
   data,
   divisaoAtual,
-  divisaoNova,
+  divisaoNova: divisaoFromProps,
   menData,
   children,
 }: PropsWithChildren<{
@@ -105,6 +111,8 @@ export const ShowInfosProvider = ({
   const [version, setVersion] = useState<Version>('old');
   const [dianteira, setDianteira] = useState<boolean>(true);
   const [ruas, setRuas] = useState<boolean>(true);
+  const [divisaoNova, setDivisaoNova] = useState<Divisao>(divisaoFromProps);
+  const params = useSearchParams();
 
   const somasPorPoligono = useMemo(
     () =>
@@ -112,7 +120,7 @@ export const ShowInfosProvider = ({
         data,
         version === 'old' ? divisaoAtual : divisaoNova,
       ),
-    [version],
+    [version, divisaoNova],
   );
 
   const anciaosPorCongregacao = useMemo(() => {
@@ -175,10 +183,13 @@ export const ShowInfosProvider = ({
         menData,
         divisaoAtual,
         divisaoNova,
+        setDivisaoNova,
 
         somasPorPoligono,
         anciaosPorCongregacao,
         servosPorCongregacao,
+
+        editable: params.get('editable') === 'true',
       }}
     >
       {children}

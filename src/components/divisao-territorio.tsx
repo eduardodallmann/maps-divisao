@@ -7,7 +7,7 @@ import { polygonColors } from '~/styles/map-colors';
 import { Polygon } from './polygon';
 
 export function DivisaoTerritorio() {
-  const { version, divisaoAtual, divisaoNova } = useShowInfos();
+  const { version, divisaoAtual, divisaoNova, editable } = useShowInfos();
 
   const divisaoEscolhida = version === 'old' ? divisaoAtual : divisaoNova;
 
@@ -16,12 +16,14 @@ export function DivisaoTerritorio() {
       return (
         <Polygon
           key={congregation}
+          editable={version !== 'old' && editable}
           paths={divisao}
           fillColor={polygonColors[congregation as CongregacaoName].fillColor}
           strokeColor={
             polygonColors[congregation as CongregacaoName].strokeColor
           }
           strokeOpacity={0.6}
+          congregacao={congregation}
         />
       );
     },

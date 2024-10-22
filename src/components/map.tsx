@@ -27,7 +27,7 @@ export function MyMap({ mapApiKey }: { mapApiKey: string }) {
   return (
     <APIProvider apiKey={mapApiKey}>
       <Map
-        mapId={'bf51a910020fa25a'}
+        mapId={'7b0db937b6f5c785'}
         style={containerStyle}
         defaultCenter={center}
         defaultZoom={13}

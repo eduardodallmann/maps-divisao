@@ -13,6 +13,8 @@ import {
 
 import { GoogleMapsContext, useMapsLibrary } from '@vis.gl/react-google-maps';
 
+import { useShowInfos } from '~/hooks/use-show-infos';
+
 type PolygonEventProps = {
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onDrag?: (e: google.maps.MapMouseEvent) => void;
@@ -27,6 +29,7 @@ type PolygonCustomProps = {
    * this is an encoded string for the path, will be decoded and used as a path
    */
   encodedPaths?: string[];
+  congregacao: string;
 };
 
 export type PolygonProps = google.maps.PolygonOptions &
@@ -44,6 +47,7 @@ function usePolygon(props: PolygonProps) {
     onMouseOver,
     onMouseOut,
     encodedPaths,
+    congregacao,
     ...polygonOptions
   } = props;
   // This is here to avoid triggering the useEffect below when the callbacks change (which happen if the user didn't memoize them)
@@ -58,7 +62,7 @@ function usePolygon(props: PolygonProps) {
   });
 
   const geometryLibrary = useMapsLibrary('geometry');
-
+  const { setDivisaoNova } = useShowInfos();
   const polygon = useRef(new google.maps.Polygon()).current;
   // update PolygonOptions (note the dependencies aren't properly checked
   // here, we just assume that setOptions is smart enough to not waste a
@@ -123,6 +127,30 @@ function usePolygon(props: PolygonProps) {
       gme.clearInstanceListeners(polygon);
     };
   }, [polygon]);
+
+  useEffect(() => {
+    if (!polygon.getPath()) {
+      return;
+    }
+
+    const gme = google.maps.event;
+
+    gme.addListener(polygon.getPath(), 'set_at', processVertex);
+    gme.addListener(polygon.getPath(), 'insert_at', processVertex);
+  }, [polygon.getPath()]);
+
+  function processVertex() {
+    const array = polygon.getPath().getArray();
+    // eslint-disable-next-line no-console
+    console.log(array.map((v) => `${v.toJSON().lng},${v.toJSON().lat}`));
+    setDivisaoNova((prev) => ({
+      ...prev,
+      [congregacao]: array.map((v) => ({
+        lat: v.toJSON().lat,
+        lng: v.toJSON().lng,
+      })),
+    }));
+  }
 
   return polygon;
 }

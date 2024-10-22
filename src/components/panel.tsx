@@ -1,6 +1,8 @@
 'use client';
 
 import { useShowInfos } from '~/hooks/use-show-infos';
+import type { CongregacaoName } from '~/infra/types';
+import { polygonColors } from '~/styles/map-colors';
 
 import { ReactPopover } from './common/popover';
 import { Toggle } from './common/toggle';
@@ -55,7 +57,14 @@ export function Panel() {
           <tbody>
             {Object.entries(somasPorPoligono).map(([key, value]) => (
               <tr key={key}>
-                <td className="border px-1 py-1">{key}</td>
+                <td
+                  className="border px-1 py-1"
+                  style={{
+                    backgroundColor: `${polygonColors[key as CongregacaoName].fillColor}77`,
+                  }}
+                >
+                  {key}
+                </td>
                 <td className="border px-1 py-1">{value}</td>
                 <td className="border px-1 py-1">
                   <ReactPopover
