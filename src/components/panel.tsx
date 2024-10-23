@@ -70,8 +70,10 @@ export function Panel() {
                   <ReactPopover
                     content={
                       <>
-                        {anciaosPorCongregacao[key]?.map((anc) => (
-                          <p key={anc}>{anc}</p>
+                        {anciaosPorCongregacao[key]?.map((anc, index) => (
+                          <p key={index} className="whitespace-nowrap">
+                            {anc}
+                          </p>
                         ))}
                       </>
                     }
@@ -83,8 +85,10 @@ export function Panel() {
                   <ReactPopover
                     content={
                       <>
-                        {servosPorCongregacao[key]?.map((ser) => (
-                          <p key={ser}>{ser}</p>
+                        {servosPorCongregacao[key]?.map((ser, index) => (
+                          <p key={index} className="whitespace-nowrap">
+                            {ser}
+                          </p>
                         ))}
                       </>
                     }

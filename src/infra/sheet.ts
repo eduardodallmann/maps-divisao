@@ -58,7 +58,16 @@ export async function getMenData() {
     );
     const data: {
       values: Array<
-        [string, CongregacaoName, CongregacaoName, Privilegio, string, string]
+        [
+          string,
+          CongregacaoName,
+          CongregacaoName,
+          Privilegio,
+          string,
+          string,
+          string,
+          string,
+        ]
       >;
     } = await response.json();
 
@@ -82,6 +91,8 @@ export async function getMenData() {
           privilegio,
           endereco,
           coordenadas,
+          comissaoAtual = '',
+          comissaoNova = '',
         ]) => {
           const [lat, lng] = coordenadas.split(',').map(Number);
 
@@ -92,6 +103,8 @@ export async function getMenData() {
             congregacaoAtual,
             congregacaoNova: congregacaoDestino,
             endereco,
+            comissaoAtual,
+            comissaoNova,
             lat,
             lng,
           };

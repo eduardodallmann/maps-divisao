@@ -6,6 +6,7 @@ import {
   useState,
   type Dispatch,
   type PropsWithChildren,
+  type ReactNode,
   type SetStateAction,
 } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -31,8 +32,8 @@ type ShowInfosContextType = {
   setDivisaoNova: Dispatch<SetStateAction<Divisao>>;
 
   somasPorPoligono: { [nome: string]: number };
-  anciaosPorCongregacao: { [nome: string]: Array<string> };
-  servosPorCongregacao: { [nome: string]: Array<string> };
+  anciaosPorCongregacao: { [nome: string]: Array<ReactNode> };
+  servosPorCongregacao: { [nome: string]: Array<ReactNode> };
 
   editable: boolean;
 
@@ -124,21 +125,48 @@ export const ShowInfosProvider = ({
   );
 
   const anciaosPorCongregacao = useMemo(() => {
-    const anciaos: { [nome: string]: Array<string> } = {};
+    const anciaos: { [nome: string]: Array<ReactNode> } = {};
+
+    const sortedMenData = [...menData].sort((a, b) => {
+      const comissoes = ['Coor.', 'Secr.', 'SS'];
+      const comissao = version === 'old' ? 'comissaoAtual' : 'comissaoNova';
+
+      const comissaoA = comissoes.includes(a[comissao])
+        ? comissoes.indexOf(a[comissao])
+        : 3; // Define 3 para itens que não estão na lista
+
+      const comissaoB = comissoes.includes(b[comissao])
+        ? comissoes.indexOf(b[comissao])
+        : 3;
+
+      if (comissaoA !== comissaoB) {
+        return comissaoA - comissaoB;
+      }
+
+      // Ordenar alfabeticamente se estiverem fora da lista de comissões
+      return a[comissao].localeCompare(b[comissao]);
+    });
 
     for (const {
       congregacaoAtual,
       congregacaoNova,
       privilegio,
       key,
-    } of menData) {
+      comissaoAtual,
+      comissaoNova,
+    } of sortedMenData) {
       if (privilegio === 'Ancião') {
         const congregacao =
           version === 'old' ? congregacaoAtual : congregacaoNova;
+        const comissao = version === 'old' ? comissaoAtual : comissaoNova;
         if (!anciaos[congregacao]) {
           anciaos[congregacao] = [];
         }
-        anciaos[congregacao].push(key);
+        anciaos[congregacao].push(
+          <>
+            {key} <b>{comissao}</b>
+          </>,
+        );
       }
     }
 
