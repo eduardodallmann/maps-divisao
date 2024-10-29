@@ -124,14 +124,16 @@ export const ShowInfosProvider = ({
   const [divisaoNovaB, setDivisaoNovaB] = useState<Divisao>({} as Divisao);
   const params = useSearchParams();
 
-  const somasPorPoligono = useMemo(
-    () =>
-      somarValoresPorPoligono(
-        data,
-        version === 'old' ? divisaoAtual : divisaoNova,
-      ),
-    [version, divisaoNova],
-  );
+  const somasPorPoligono = useMemo(() => {
+    const divisaoObj: Record<Version, Divisao> = {
+      old: divisaoAtual,
+      new: divisaoNova,
+      newB: divisaoNovaB,
+    };
+    const divisao = divisaoObj[version];
+
+    return somarValoresPorPoligono(data, divisao);
+  }, [version, divisaoNova, divisaoNovaB]);
 
   const anciaosPorCongregacao = useMemo(() => {
     const anciaos: { [nome: string]: Array<ReactNode> } = {};
@@ -184,7 +186,7 @@ export const ShowInfosProvider = ({
     }
 
     return anciaos;
-  }, [version]);
+  }, [version, menData]);
 
   const servosPorCongregacao = useMemo(() => {
     const servos: { [nome: string]: Array<string> } = {};
@@ -206,7 +208,7 @@ export const ShowInfosProvider = ({
     }
 
     return servos;
-  }, [version]);
+  }, [version, menData]);
 
   useEffect(() => {
     dataPromise.then(setData);
