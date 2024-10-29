@@ -7,9 +7,15 @@ import { polygonColors } from '~/styles/map-colors';
 import { Polygon } from './polygon';
 
 export function DivisaoTerritorio() {
-  const { version, divisaoAtual, divisaoNova, editable } = useShowInfos();
+  const { version, divisaoAtual, divisaoNova, divisaoNovaB, editable } =
+    useShowInfos();
 
-  const divisaoEscolhida = version === 'old' ? divisaoAtual : divisaoNova;
+  const divisaoObj = {
+    old: divisaoAtual,
+    new: divisaoNova,
+    newB: divisaoNovaB,
+  };
+  const divisaoEscolhida = divisaoObj[version];
 
   const data = Object.entries(divisaoEscolhida).map(
     ([congregation, divisao]) => {

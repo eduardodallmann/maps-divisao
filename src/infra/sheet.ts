@@ -119,10 +119,15 @@ export async function getMenData() {
   }
 }
 
-export async function getDivisaoData(versao: 'old' | 'new') {
+export async function getDivisaoData(versao: 'old' | 'new' | 'newB') {
   const apiKey = process.env.API_KEY;
   const spreadsheetId = process.env.SPREADSHEET_ID;
-  const sheetName = versao === 'old' ? 'DivisaoAtual' : 'DivisaoNova';
+  const sheetNameObj = {
+    old: 'DivisaoAtual',
+    new: 'DivisaoNova',
+    newB: 'DivisaoNovaB',
+  };
+  const sheetName = sheetNameObj[versao];
   const dados: Divisao = {
     [CongregacaoName.TAPAJOS]: [],
     [CongregacaoName.CENTRAL]: [],

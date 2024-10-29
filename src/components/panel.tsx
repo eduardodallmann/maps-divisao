@@ -5,6 +5,7 @@ import type { CongregacaoName } from '~/infra/types';
 import { polygonColors } from '~/styles/map-colors';
 
 import { ReactPopover } from './common/popover';
+import { Select } from './common/select';
 import { Toggle } from './common/toggle';
 
 export function Panel() {
@@ -22,12 +23,15 @@ export function Panel() {
 
   return (
     <div className="fixed top-0 right-0 m-4 bg-white p-4 rounded shadow-lg flex flex-col gap-4">
-      <Toggle
-        label="Mostrar novo"
-        value={version === 'new'}
-        onChange={() => {
-          setVersion(version === 'new' ? 'old' : 'new');
-        }}
+      <Select
+        label="Configuração"
+        options={[
+          { value: 'old', label: 'Atual' },
+          { value: 'new', label: 'Nova opção A' },
+          { value: 'newB', label: 'Nova opção B' },
+        ]}
+        value={version}
+        onChange={setVersion}
       />
       <Toggle
         label="Mostrar dianteira"

@@ -6,10 +6,11 @@ import { getDivisaoData, getMenData, getStreetsData } from '~/infra/sheet';
 
 export default async function Home() {
   const apiKey = process.env.API_KEY || '';
-  const data = await getStreetsData();
-  const menData = await getMenData();
-  const divisaoAtual = await getDivisaoData('old');
-  const divisaoNova = await getDivisaoData('new');
+  const data = getStreetsData();
+  const menData = getMenData();
+  const divisaoAtual = getDivisaoData('old');
+  const divisaoNova = getDivisaoData('new');
+  const divisaoNovaB = getDivisaoData('newB');
 
   return (
     <ShowInfosProvider
@@ -17,6 +18,7 @@ export default async function Home() {
       menData={menData}
       divisaoAtual={divisaoAtual}
       divisaoNova={divisaoNova}
+      divisaoNovaB={divisaoNovaB}
     >
       <MyMap mapApiKey={apiKey} />
     </ShowInfosProvider>

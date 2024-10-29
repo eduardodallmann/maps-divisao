@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useEffect,
   useMemo,
   useState,
   type Dispatch,
@@ -22,13 +23,14 @@ interface Poligono {
   [nome: string]: Coordenada[];
 }
 
-type Version = 'old' | 'new';
+export type Version = 'old' | 'new' | 'newB';
 
 type ShowInfosContextType = {
   data: Array<Counter>;
   menData: Array<Dianteira>;
   divisaoAtual: Divisao;
   divisaoNova: Divisao;
+  divisaoNovaB: Divisao;
   setDivisaoNova: Dispatch<SetStateAction<Divisao>>;
 
   somasPorPoligono: { [nome: string]: number };
@@ -98,21 +100,28 @@ function somarValoresPorPoligono(
 }
 
 export const ShowInfosProvider = ({
-  data,
-  divisaoAtual,
-  divisaoNova: divisaoFromProps,
-  menData,
+  data: dataPromise,
+  divisaoAtual: divisaoAtualPromise,
+  divisaoNova: divisaoNovaPromise,
+  divisaoNovaB: divisaoNovaBPromise,
+  menData: menDataPromise,
   children,
 }: PropsWithChildren<{
-  data: Array<Counter>;
-  menData: Array<Dianteira>;
-  divisaoAtual: Divisao;
-  divisaoNova: Divisao;
+  data: Promise<Array<Counter>>;
+  menData: Promise<Array<Dianteira>>;
+  divisaoAtual: Promise<Divisao>;
+  divisaoNova: Promise<Divisao>;
+  divisaoNovaB: Promise<Divisao>;
 }>) => {
+  const [data, setData] = useState<Array<Counter>>([]);
+  const [menData, setMenData] = useState<Array<Dianteira>>([]);
+  const [divisaoAtual, setDivisaoAtual] = useState<Divisao>({} as Divisao);
+
   const [version, setVersion] = useState<Version>('old');
   const [dianteira, setDianteira] = useState<boolean>(true);
   const [ruas, setRuas] = useState<boolean>(true);
-  const [divisaoNova, setDivisaoNova] = useState<Divisao>(divisaoFromProps);
+  const [divisaoNova, setDivisaoNova] = useState<Divisao>({} as Divisao);
+  const [divisaoNovaB, setDivisaoNovaB] = useState<Divisao>({} as Divisao);
   const params = useSearchParams();
 
   const somasPorPoligono = useMemo(
@@ -129,11 +138,16 @@ export const ShowInfosProvider = ({
 
     const sortedMenData = [...menData].sort((a, b) => {
       const comissoes = ['Coor.', 'Secr.', 'SS'];
-      const comissao = version === 'old' ? 'comissaoAtual' : 'comissaoNova';
+      const comissaoObj: Record<Version, 'comissaoAtual' | 'comissaoNova'> = {
+        old: 'comissaoAtual',
+        new: 'comissaoNova',
+        newB: 'comissaoNova',
+      };
+      const comissao = comissaoObj[version];
 
       const comissaoA = comissoes.includes(a[comissao])
         ? comissoes.indexOf(a[comissao])
-        : 3; // Define 3 para itens que não estão na lista
+        : 3;
 
       const comissaoB = comissoes.includes(b[comissao])
         ? comissoes.indexOf(b[comissao])
@@ -143,7 +157,6 @@ export const ShowInfosProvider = ({
         return comissaoA - comissaoB;
       }
 
-      // Ordenar alfabeticamente se estiverem fora da lista de comissões
       return a[comissao].localeCompare(b[comissao]);
     });
 
@@ -195,6 +208,14 @@ export const ShowInfosProvider = ({
     return servos;
   }, [version]);
 
+  useEffect(() => {
+    dataPromise.then(setData);
+    divisaoAtualPromise.then(setDivisaoAtual);
+    menDataPromise.then(setMenData);
+    divisaoNovaPromise.then(setDivisaoNova);
+    divisaoNovaBPromise.then(setDivisaoNovaB);
+  }, []);
+
   return (
     <ShowInfosContext.Provider
       value={{
@@ -211,6 +232,7 @@ export const ShowInfosProvider = ({
         menData,
         divisaoAtual,
         divisaoNova,
+        divisaoNovaB,
         setDivisaoNova,
 
         somasPorPoligono,
