@@ -133,7 +133,7 @@ export const ShowInfosProvider = ({
     const divisao = divisaoObj[version];
 
     return somarValoresPorPoligono(data, divisao);
-  }, [version, divisaoNova, divisaoNovaB]);
+  }, [data, version, divisaoNova, divisaoNovaB]);
 
   const anciaosPorCongregacao = useMemo(() => {
     const anciaos: { [nome: string]: Array<ReactNode> } = {};
