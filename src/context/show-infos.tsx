@@ -119,7 +119,7 @@ export const ShowInfosProvider = ({
 
   const [version, setVersion] = useState<Version>('old');
   const [dianteira, setDianteira] = useState<boolean>(true);
-  const [ruas, setRuas] = useState<boolean>(true);
+  const [ruas, setRuas] = useState<boolean>(false);
   const [divisaoNova, setDivisaoNova] = useState<Divisao>({} as Divisao);
   const [divisaoNovaB, setDivisaoNovaB] = useState<Divisao>({} as Divisao);
   const params = useSearchParams();
