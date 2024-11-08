@@ -140,10 +140,13 @@ export const ShowInfosProvider = ({
 
     const sortedMenData = [...menData].sort((a, b) => {
       const comissoes = ['Coor.', 'Secr.', 'SS'];
-      const comissaoObj: Record<Version, 'comissaoAtual' | 'comissaoNova'> = {
+      const comissaoObj: Record<
+        Version,
+        'comissaoAtual' | 'comissaoNova' | 'comissaoNovaB'
+      > = {
         old: 'comissaoAtual',
         new: 'comissaoNova',
-        newB: 'comissaoNova',
+        newB: 'comissaoNovaB',
       };
       const comissao = comissaoObj[version];
 
@@ -165,15 +168,24 @@ export const ShowInfosProvider = ({
     for (const {
       congregacaoAtual,
       congregacaoNova,
+      congregacaoNovaB,
       privilegio,
       key,
       comissaoAtual,
       comissaoNova,
+      comissaoNovaB,
     } of sortedMenData) {
       if (privilegio === 'Ancião') {
-        const congregacao =
-          version === 'old' ? congregacaoAtual : congregacaoNova;
-        const comissao = version === 'old' ? comissaoAtual : comissaoNova;
+        const congregacao = {
+          old: congregacaoAtual,
+          new: congregacaoNova,
+          newB: congregacaoNovaB,
+        }[version];
+        const comissao = {
+          old: comissaoAtual,
+          new: comissaoNova,
+          newB: comissaoNovaB,
+        }[version];
         if (!anciaos[congregacao]) {
           anciaos[congregacao] = [];
         }
@@ -194,12 +206,16 @@ export const ShowInfosProvider = ({
     for (const {
       congregacaoAtual,
       congregacaoNova,
+      congregacaoNovaB,
       privilegio,
       key,
     } of menData) {
       if (privilegio === 'Servo') {
-        const congregacao =
-          version === 'old' ? congregacaoAtual : congregacaoNova;
+        const congregacao = {
+          old: congregacaoAtual,
+          new: congregacaoNova,
+          newB: congregacaoNovaB,
+        }[version];
         if (!servos[congregacao]) {
           servos[congregacao] = [];
         }

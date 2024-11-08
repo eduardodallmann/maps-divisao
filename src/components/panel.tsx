@@ -1,5 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
+import { FaCaretDown } from 'react-icons/fa6';
+
 import { useShowInfos } from '~/hooks/use-show-infos';
 import type { CongregacaoName } from '~/infra/types';
 import { polygonColors } from '~/styles/map-colors';
@@ -20,90 +24,109 @@ export function Panel() {
     anciaosPorCongregacao,
     servosPorCongregacao,
   } = useShowInfos();
+  const [openPanel, setOpenPanel] = useState(true);
 
   return (
-    <div className="fixed top-0 right-0 m-4 bg-white p-4 rounded shadow-lg flex flex-col gap-4">
-      <Select
-        label="Configuração"
-        options={[
-          { value: 'old', label: 'Atual' },
-          { value: 'new', label: 'Nova opção A' },
-          { value: 'newB', label: 'Nova opção B' },
-        ]}
-        value={version}
-        onChange={setVersion}
-      />
-      <Toggle
-        label="Mostrar dianteira"
-        value={dianteira}
-        onChange={() => {
-          setDianteira(!dianteira);
-        }}
-      />
-      <Toggle
-        label="Mostrar qnt. de casas"
-        value={ruas}
-        onChange={() => {
-          setRuas(!ruas);
-        }}
-      />
-      Qnts por congregação:
-      {somasPorPoligono && (
-        <table className="table-auto border-collapse">
-          <thead>
-            <tr>
-              <th className="border px-1 py-1">Congr.</th>
-              <th className="border px-1 py-1">Casas</th>
-              <th className="border px-1 py-1">Anc.</th>
-              <th className="border px-1 py-1">Ser.</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(somasPorPoligono).map(([key, value]) => (
-              <tr key={key}>
-                <td
-                  className="border px-1 py-1"
-                  style={{
-                    backgroundColor: `${polygonColors[key as CongregacaoName].fillColor}77`,
-                  }}
-                >
-                  {key}
-                </td>
-                <td className="border px-1 py-1">{value}</td>
-                <td className="border px-1 py-1">
-                  <ReactPopover
-                    content={
-                      <>
-                        {anciaosPorCongregacao[key]?.map((anc, index) => (
-                          <p key={index} className="whitespace-nowrap">
-                            {anc}
-                          </p>
-                        ))}
-                      </>
-                    }
-                  >
-                    {anciaosPorCongregacao[key]?.length}
-                  </ReactPopover>
-                </td>
-                <td className="border px-1 py-1">
-                  <ReactPopover
-                    content={
-                      <>
-                        {servosPorCongregacao[key]?.map((ser, index) => (
-                          <p key={index} className="whitespace-nowrap">
-                            {ser}
-                          </p>
-                        ))}
-                      </>
-                    }
-                  >
-                    {servosPorCongregacao[key]?.length}
-                  </ReactPopover>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="fixed top-0 right-0 m-4 bg-white p-4 rounded shadow-lg flex flex-col gap-4 min-h-14 min-w-14">
+      <button
+        className={`absolute right-4 p-1 rounded-full bg-gray-200 hover:bg-gray-300 transition-transform transform ${openPanel && 'rotate-180'}`}
+        onClick={() => setOpenPanel(!openPanel)}
+        title="Abrir/fechar painel"
+      >
+        <FaCaretDown />
+      </button>
+      {openPanel && (
+        <>
+          <Select
+            label="Configuração"
+            options={[
+              { value: 'old', label: 'Atual' },
+              { value: 'new', label: 'Opção com 6 congr.' },
+              { value: 'newB', label: 'Opção com 7 congr.' },
+            ]}
+            value={version}
+            onChange={setVersion}
+          />
+          <Toggle
+            label="Mostrar dianteira"
+            value={dianteira}
+            onChange={() => {
+              setDianteira(!dianteira);
+            }}
+          />
+          <Toggle
+            label="Mostrar qnt. de casas"
+            value={ruas}
+            onChange={() => {
+              setRuas(!ruas);
+            }}
+          />
+          Qnts por congregação:
+          {somasPorPoligono && (
+            <table className="table-auto border-collapse">
+              <thead>
+                <tr>
+                  <th className="border px-1 py-1">Congr.</th>
+                  <th className="border px-1 py-1">Casas</th>
+                  <th className="border px-1 py-1">Anc.</th>
+                  <th className="border px-1 py-1">Ser.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(somasPorPoligono)
+                  .filter(
+                    ([key]) =>
+                      version === 'newB' ||
+                      (key !== 'Leste' && key !== 'Oeste') ||
+                      (version === 'new' && key !== 'Leste'),
+                  )
+                  .map(([key, value]) => (
+                    <tr key={key}>
+                      <td
+                        className="border px-1 py-1"
+                        style={{
+                          backgroundColor: `${polygonColors[key as CongregacaoName].fillColor}77`,
+                        }}
+                      >
+                        {key}
+                      </td>
+                      <td className="border px-1 py-1">{value}</td>
+                      <td className="border px-1 py-1">
+                        <ReactPopover
+                          content={
+                            <>
+                              {anciaosPorCongregacao[key]?.map((anc, index) => (
+                                <p key={index} className="whitespace-nowrap">
+                                  {anc}
+                                </p>
+                              ))}
+                            </>
+                          }
+                        >
+                          {anciaosPorCongregacao[key]?.length}
+                        </ReactPopover>
+                      </td>
+                      <td className="border px-1 py-1">
+                        <ReactPopover
+                          content={
+                            <>
+                              {servosPorCongregacao[key]?.map((ser, index) => (
+                                <p key={index} className="whitespace-nowrap">
+                                  {ser}
+                                </p>
+                              ))}
+                            </>
+                          }
+                        >
+                          {servosPorCongregacao[key]?.length}
+                        </ReactPopover>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
+        </>
       )}
     </div>
   );

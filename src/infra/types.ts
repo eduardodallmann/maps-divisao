@@ -10,10 +10,12 @@ export type Dianteira = {
   value: string;
   congregacaoAtual: CongregacaoName;
   congregacaoNova: CongregacaoName;
+  congregacaoNovaB: CongregacaoName;
   privilegio: Privilegio;
   endereco: string;
   comissaoAtual: string;
   comissaoNova: string;
+  comissaoNovaB: string;
   lat: number;
   lng: number;
 };
