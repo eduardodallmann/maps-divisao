@@ -9,16 +9,18 @@ export default async function Home() {
   const data = getStreetsData();
   const menData = getMenData();
   const divisaoAtual = getDivisaoData('old');
-  const divisaoNova = getDivisaoData('new');
-  const divisaoNovaB = getDivisaoData('newB');
+  const divisaoNova6A = getDivisaoData('new6A');
+  const divisaoNova6B = getDivisaoData('new6B');
+  const divisaoNova7 = getDivisaoData('new7');
 
   return (
     <ShowInfosProvider
       data={data}
       menData={menData}
       divisaoAtual={divisaoAtual}
-      divisaoNova={divisaoNova}
-      divisaoNovaB={divisaoNovaB}
+      divisaoNova6A={divisaoNova6A}
+      divisaoNova6B={divisaoNova6B}
+      divisaoNova7={divisaoNova7}
     >
       <MyMap mapApiKey={apiKey} />
     </ShowInfosProvider>

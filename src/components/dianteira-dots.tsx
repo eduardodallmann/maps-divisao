@@ -71,11 +71,32 @@ export function DianteiraDots() {
     (id: string) => menData.find((d) => d.key === id),
     [menData],
   );
+  const getCongregacaoVersion = useCallback(() => {
+    return {
+      old: 'congregacaoAtual',
+      new6A: 'congregacaoNova6A',
+      new6B: 'congregacaoNova6B',
+      new7: 'congregacaoNova7',
+    }[version] as
+      | 'congregacaoAtual'
+      | 'congregacaoNova6A'
+      | 'congregacaoNova6B'
+      | 'congregacaoNova7';
+  }, [version]);
 
   return (
     <>
       {menData.map(
-        ({ key, congregacaoAtual, congregacaoNova, privilegio, lat, lng }) => (
+        ({
+          key,
+          congregacaoAtual,
+          congregacaoNova6A,
+          congregacaoNova6B,
+          congregacaoNova7,
+          privilegio,
+          lat,
+          lng,
+        }) => (
           <AdvancedMarkerWithRef
             onMarkerClick={(marker: google.maps.marker.AdvancedMarkerElement) =>
               onMarkerClick(key, marker)
@@ -89,19 +110,27 @@ export function DianteiraDots() {
             }}
             position={{ lat, lng }}
           >
-            {congregacaoAtual && congregacaoNova && (
-              <Pin
-                background={
-                  dianteiraDots[
-                    version === 'old' ? congregacaoAtual : congregacaoNova
-                  ].background
-                }
-                borderColor={selectedId === key ? '#1e89a1' : null}
-                glyphColor={selectedId === key ? '#0f677a' : null}
-              >
-                {privilegio === Privilegio.ANCIAO ? 'Anc' : 'Ser'}
-              </Pin>
-            )}
+            {congregacaoAtual &&
+              congregacaoNova6A &&
+              congregacaoNova6B &&
+              congregacaoNova7 && (
+                <Pin
+                  background={
+                    dianteiraDots[
+                      {
+                        old: congregacaoAtual,
+                        new6A: congregacaoNova6A,
+                        new6B: congregacaoNova6B,
+                        new7: congregacaoNova7,
+                      }[version]
+                    ].background
+                  }
+                  borderColor={selectedId === key ? '#1e89a1' : null}
+                  glyphColor={selectedId === key ? '#0f677a' : null}
+                >
+                  {privilegio === Privilegio.ANCIAO ? 'Anc' : 'Ser'}
+                </Pin>
+              )}
           </AdvancedMarkerWithRef>
         ),
       )}
@@ -115,8 +144,13 @@ export function DianteiraDots() {
           </h2>
           <p>{getDianteira(String(selectedId))?.endereco}</p>
           <p>
-            {getDianteira(String(selectedId))?.congregacaoAtual} {' > '}
-            {getDianteira(String(selectedId))?.congregacaoNova}
+            {getDianteira(String(selectedId))?.congregacaoAtual}
+            {version !== 'old' && (
+              <>
+                {' > '}
+                {getDianteira(String(selectedId))?.[getCongregacaoVersion()]}
+              </>
+            )}
           </p>
         </InfoWindow>
       )}

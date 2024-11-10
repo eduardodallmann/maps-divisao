@@ -7,13 +7,20 @@ import { polygonColors } from '~/styles/map-colors';
 import { Polygon } from './polygon';
 
 export function DivisaoTerritorio() {
-  const { version, divisaoAtual, divisaoNova, divisaoNovaB, editable } =
-    useShowInfos();
+  const {
+    version,
+    divisaoAtual,
+    divisaoNovaA6,
+    divisaoNovaB6,
+    divisaoNova7,
+    editable,
+  } = useShowInfos();
 
   const divisaoObj = {
     old: divisaoAtual,
-    new: divisaoNova,
-    newB: divisaoNovaB,
+    new6A: divisaoNovaA6,
+    new6B: divisaoNovaB6,
+    new7: divisaoNova7,
   };
   const divisaoEscolhida = divisaoObj[version];
 

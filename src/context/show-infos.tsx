@@ -23,14 +23,15 @@ interface Poligono {
   [nome: string]: Coordenada[];
 }
 
-export type Version = 'old' | 'new' | 'newB';
+export type Version = 'old' | 'new6A' | 'new6B' | 'new7';
 
 type ShowInfosContextType = {
   data: Array<Counter>;
   menData: Array<Dianteira>;
   divisaoAtual: Divisao;
-  divisaoNova: Divisao;
-  divisaoNovaB: Divisao;
+  divisaoNovaA6: Divisao;
+  divisaoNovaB6: Divisao;
+  divisaoNova7: Divisao;
   setDivisaoNova: Dispatch<SetStateAction<Divisao>>;
 
   somasPorPoligono: { [nome: string]: number };
@@ -102,16 +103,18 @@ function somarValoresPorPoligono(
 export const ShowInfosProvider = ({
   data: dataPromise,
   divisaoAtual: divisaoAtualPromise,
-  divisaoNova: divisaoNovaPromise,
-  divisaoNovaB: divisaoNovaBPromise,
+  divisaoNova6A: divisaoNova6APromise,
+  divisaoNova6B: divisaoNova6BPromise,
+  divisaoNova7: divisaoNova7Promise,
   menData: menDataPromise,
   children,
 }: PropsWithChildren<{
   data: Promise<Array<Counter>>;
   menData: Promise<Array<Dianteira>>;
   divisaoAtual: Promise<Divisao>;
-  divisaoNova: Promise<Divisao>;
-  divisaoNovaB: Promise<Divisao>;
+  divisaoNova6A: Promise<Divisao>;
+  divisaoNova6B: Promise<Divisao>;
+  divisaoNova7: Promise<Divisao>;
 }>) => {
   const [data, setData] = useState<Array<Counter>>([]);
   const [menData, setMenData] = useState<Array<Dianteira>>([]);
@@ -120,20 +123,22 @@ export const ShowInfosProvider = ({
   const [version, setVersion] = useState<Version>('old');
   const [dianteira, setDianteira] = useState<boolean>(true);
   const [ruas, setRuas] = useState<boolean>(false);
-  const [divisaoNova, setDivisaoNova] = useState<Divisao>({} as Divisao);
-  const [divisaoNovaB, setDivisaoNovaB] = useState<Divisao>({} as Divisao);
+  const [divisaoNova6A, setDivisaoNova6A] = useState<Divisao>({} as Divisao);
+  const [divisaoNova6B, setDivisaoNova6B] = useState<Divisao>({} as Divisao);
+  const [divisaoNova7, setDivisaoNova7] = useState<Divisao>({} as Divisao);
   const params = useSearchParams();
 
   const somasPorPoligono = useMemo(() => {
     const divisaoObj: Record<Version, Divisao> = {
       old: divisaoAtual,
-      new: divisaoNova,
-      newB: divisaoNovaB,
+      new6A: divisaoNova6A,
+      new6B: divisaoNova6B,
+      new7: divisaoNova7,
     };
     const divisao = divisaoObj[version];
 
     return somarValoresPorPoligono(data, divisao);
-  }, [data, version, divisaoNova, divisaoNovaB]);
+  }, [data, version, divisaoNova6A, divisaoNova6B, divisaoNova7]);
 
   const anciaosPorCongregacao = useMemo(() => {
     const anciaos: { [nome: string]: Array<ReactNode> } = {};
@@ -142,11 +147,12 @@ export const ShowInfosProvider = ({
       const comissoes = ['Coor.', 'Secr.', 'SS'];
       const comissaoObj: Record<
         Version,
-        'comissaoAtual' | 'comissaoNova' | 'comissaoNovaB'
+        'comissaoAtual' | 'comissaoNova6A' | 'comissaoNova6B' | 'comissaoNova7'
       > = {
         old: 'comissaoAtual',
-        new: 'comissaoNova',
-        newB: 'comissaoNovaB',
+        new6A: 'comissaoNova6A',
+        new6B: 'comissaoNova6B',
+        new7: 'comissaoNova7',
       };
       const comissao = comissaoObj[version];
 
@@ -167,24 +173,28 @@ export const ShowInfosProvider = ({
 
     for (const {
       congregacaoAtual,
-      congregacaoNova,
-      congregacaoNovaB,
+      congregacaoNova6A,
+      congregacaoNova6B,
+      congregacaoNova7,
       privilegio,
       key,
       comissaoAtual,
-      comissaoNova,
-      comissaoNovaB,
+      comissaoNova6A,
+      comissaoNova6B,
+      comissaoNova7,
     } of sortedMenData) {
       if (privilegio === 'Ancião') {
         const congregacao = {
           old: congregacaoAtual,
-          new: congregacaoNova,
-          newB: congregacaoNovaB,
+          new6A: congregacaoNova6A,
+          new6B: congregacaoNova6B,
+          new7: congregacaoNova7,
         }[version];
         const comissao = {
           old: comissaoAtual,
-          new: comissaoNova,
-          newB: comissaoNovaB,
+          new6A: comissaoNova6A,
+          new6B: comissaoNova6B,
+          new7: comissaoNova7,
         }[version];
         if (!anciaos[congregacao]) {
           anciaos[congregacao] = [];
@@ -205,16 +215,18 @@ export const ShowInfosProvider = ({
 
     for (const {
       congregacaoAtual,
-      congregacaoNova,
-      congregacaoNovaB,
+      congregacaoNova6A,
+      congregacaoNova6B,
+      congregacaoNova7,
       privilegio,
       key,
     } of menData) {
       if (privilegio === 'Servo') {
         const congregacao = {
           old: congregacaoAtual,
-          new: congregacaoNova,
-          newB: congregacaoNovaB,
+          new6A: congregacaoNova6A,
+          new6B: congregacaoNova6B,
+          new7: congregacaoNova7,
         }[version];
         if (!servos[congregacao]) {
           servos[congregacao] = [];
@@ -230,8 +242,9 @@ export const ShowInfosProvider = ({
     dataPromise.then(setData);
     divisaoAtualPromise.then(setDivisaoAtual);
     menDataPromise.then(setMenData);
-    divisaoNovaPromise.then(setDivisaoNova);
-    divisaoNovaBPromise.then(setDivisaoNovaB);
+    divisaoNova6APromise.then(setDivisaoNova6A);
+    divisaoNova6BPromise.then(setDivisaoNova6B);
+    divisaoNova7Promise.then(setDivisaoNova7);
   }, []);
 
   return (
@@ -249,9 +262,10 @@ export const ShowInfosProvider = ({
         data,
         menData,
         divisaoAtual,
-        divisaoNova,
-        divisaoNovaB,
-        setDivisaoNova,
+        divisaoNovaA6: divisaoNova6A,
+        divisaoNovaB6: divisaoNova6B,
+        divisaoNova7,
+        setDivisaoNova: setDivisaoNova6A,
 
         somasPorPoligono,
         anciaosPorCongregacao,

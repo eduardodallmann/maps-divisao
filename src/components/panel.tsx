@@ -41,8 +41,9 @@ export function Panel() {
             label="Configuração"
             options={[
               { value: 'old', label: 'Atual' },
-              { value: 'new', label: 'Opção com 6 congr.' },
-              { value: 'newB', label: 'Opção com 7 congr.' },
+              { value: 'new6A', label: 'Opção A com 6 congr.' },
+              { value: 'new6B', label: 'Opção B com 6 congr.' },
+              { value: 'new7', label: 'Opção com 7 congr.' },
             ]}
             value={version}
             onChange={setVersion}
@@ -74,12 +75,22 @@ export function Panel() {
               </thead>
               <tbody>
                 {Object.entries(somasPorPoligono)
-                  .filter(
-                    ([key]) =>
-                      version === 'newB' ||
-                      (key !== 'Leste' && key !== 'Oeste') ||
-                      (version === 'new' && key !== 'Leste'),
-                  )
+                  .filter(([key]) => {
+                    if (
+                      (key === 'Leste' || key === 'Oeste') &&
+                      version === 'old'
+                    ) {
+                      return false;
+                    }
+                    if (
+                      key === 'Leste' &&
+                      (version === 'new6A' || version === 'new6B')
+                    ) {
+                      return false;
+                    }
+
+                    return true;
+                  })
                   .map(([key, value]) => (
                     <tr key={key}>
                       <td

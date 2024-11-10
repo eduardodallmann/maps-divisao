@@ -63,7 +63,9 @@ export async function getMenData() {
           CongregacaoName,
           CongregacaoName,
           CongregacaoName,
+          CongregacaoName,
           Privilegio,
+          string,
           string,
           string,
           string,
@@ -79,8 +81,9 @@ export async function getMenData() {
         ([
           _nome,
           _congregacaoAtual,
-          _congregacaoDestino,
-          _congregacaoDestinoB,
+          _congregacaoDestino6A,
+          _congregacaoDestino6B,
+          _congregacaoDestino7,
           _privilegio,
           _endereco,
           coordenadas,
@@ -90,14 +93,16 @@ export async function getMenData() {
         ([
           nome,
           congregacaoAtual,
-          congregacaoDestino,
-          congregacaoDestinoB,
+          congregacaoDestino6A,
+          congregacaoDestino6B,
+          congregacaoDestino7,
           privilegio,
           endereco,
           coordenadas,
           comissaoAtual = '',
-          comissaoNova = '',
-          comissaoNovaB = '',
+          comissaoNova6A = '',
+          comissaoNova6B = '',
+          comissaoNova7 = '',
         ]) => {
           const [lat, lng] = coordenadas.split(',').map(Number);
 
@@ -106,12 +111,14 @@ export async function getMenData() {
             privilegio,
             value: nome,
             congregacaoAtual,
-            congregacaoNova: congregacaoDestino,
-            congregacaoNovaB: congregacaoDestinoB,
+            congregacaoNova6A: congregacaoDestino6A,
+            congregacaoNova6B: congregacaoDestino6B,
+            congregacaoNova7: congregacaoDestino7,
             endereco,
             comissaoAtual,
-            comissaoNova,
-            comissaoNovaB,
+            comissaoNova6A,
+            comissaoNova6B,
+            comissaoNova7,
             lat,
             lng,
           };
@@ -126,13 +133,16 @@ export async function getMenData() {
   }
 }
 
-export async function getDivisaoData(versao: 'old' | 'new' | 'newB') {
+export async function getDivisaoData(
+  versao: 'old' | 'new6A' | 'new6B' | 'new7',
+) {
   const apiKey = process.env.API_KEY;
   const spreadsheetId = process.env.SPREADSHEET_ID;
   const sheetNameObj = {
     old: 'DivisaoAtual',
-    new: 'DivisaoNova',
-    newB: 'DivisaoNovaB',
+    new6A: 'DivisaoNova6A',
+    new6B: 'DivisaoNova6B',
+    new7: 'DivisaoNova7',
   };
   const sheetName = sheetNameObj[versao];
   const dados: Divisao = {
