@@ -43,7 +43,8 @@ export function Panel() {
               { value: 'old', label: 'Atual' },
               { value: 'new6A', label: 'Opção A com 6 congr.' },
               { value: 'new6B', label: 'Opção B com 6 congr.' },
-              { value: 'new7', label: 'Opção com 7 congr.' },
+              // eslint-disable-next-line etc/no-commented-out-code
+              // { value: 'new7', label: 'Opção com 7 congr.' },
             ]}
             value={version}
             onChange={setVersion}
