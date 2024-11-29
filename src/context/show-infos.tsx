@@ -140,6 +140,17 @@ export const ShowInfosProvider = ({
     return somarValoresPorPoligono(data, divisao);
   }, [data, version, divisaoNova6A, divisaoNova6B, divisaoNova7]);
 
+  const setPorVersion = useMemo(() => {
+    const divisaoObj: Record<Version, Dispatch<SetStateAction<Divisao>>> = {
+      old: () => {},
+      new6A: setDivisaoNova6A,
+      new6B: setDivisaoNova6B,
+      new7: setDivisaoNova7,
+    };
+
+    return divisaoObj[version];
+  }, [version]);
+
   const anciaosPorCongregacao = useMemo(() => {
     const anciaos: { [nome: string]: Array<ReactNode> } = {};
 
@@ -265,7 +276,7 @@ export const ShowInfosProvider = ({
         divisaoNovaA6: divisaoNova6A,
         divisaoNovaB6: divisaoNova6B,
         divisaoNova7,
-        setDivisaoNova: setDivisaoNova6A,
+        setDivisaoNova: setPorVersion,
 
         somasPorPoligono,
         anciaosPorCongregacao,
