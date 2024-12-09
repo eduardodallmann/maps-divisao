@@ -100,7 +100,7 @@ export function Panel() {
                           backgroundColor: `${polygonColors[key as CongregacaoName].fillColor}77`,
                         }}
                       >
-                        {key}
+                        {key === 'Oeste' ? 'Oeste/Warnow' : key}
                       </td>
                       <td className="border px-1 py-1">{value}</td>
                       <td className="border px-1 py-1">
