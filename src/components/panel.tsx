@@ -1,3 +1,4 @@
+/* eslint-disable etc/no-commented-out-code */
 'use client';
 
 import { useState } from 'react';
@@ -41,8 +42,8 @@ export function Panel() {
             label="Configuração"
             options={[
               { value: 'old', label: 'Atual' },
-              { value: 'new6A', label: 'Opção A com 6 congr.' },
-              { value: 'new6B', label: 'Opção B com 6 congr.' },
+              // { value: 'new6A', label: 'Opção A com 6 congr.' },
+              { value: 'new6B', label: 'Nova formação com 6 congr.' },
               // eslint-disable-next-line etc/no-commented-out-code
               // { value: 'new7', label: 'Opção com 7 congr.' },
             ]}
