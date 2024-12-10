@@ -2,6 +2,7 @@ import { getLatLng } from '~/infra/get-lat-lng';
 import { writeStreetsCoordinates } from '~/infra/sheet';
 import type { Counter } from '~/infra/types';
 
+/**@deprecated */
 export async function completeCoordenatesStreets({
   data,
 }: {

@@ -58,3 +58,9 @@ export type Address = {
   display_name: string;
   boundingbox: string[];
 };
+
+export type WriteCoordinatesParams = {
+  sheetName: string;
+  congregation: CongregacaoName;
+  values: Array<{ lat: number; lng: number }>;
+};

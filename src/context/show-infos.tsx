@@ -12,7 +12,12 @@ import {
 } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-import type { Counter, Dianteira, Divisao } from '~/infra/types';
+import type {
+  Counter,
+  Dianteira,
+  Divisao,
+  WriteCoordinatesParams,
+} from '~/infra/types';
 
 interface Coordenada {
   lat: number;
@@ -38,7 +43,7 @@ type ShowInfosContextType = {
   anciaosPorCongregacao: { [nome: string]: Array<ReactNode> };
   servosPorCongregacao: { [nome: string]: Array<ReactNode> };
 
-  editable: boolean;
+  editable: string | null;
 
   version: Version;
   setVersion: (show: Version) => void;
@@ -48,6 +53,8 @@ type ShowInfosContextType = {
 
   ruas: boolean;
   setRuas: (show: boolean) => void;
+
+  saveCoords: (coords: WriteCoordinatesParams) => Promise<void>;
 };
 
 export const ShowInfosContext = createContext({} as ShowInfosContextType);
@@ -107,6 +114,7 @@ export const ShowInfosProvider = ({
   divisaoNova6B: divisaoNova6BPromise,
   divisaoNova7: divisaoNova7Promise,
   menData: menDataPromise,
+  saveCoords,
   children,
 }: PropsWithChildren<{
   data: Promise<Array<Counter>>;
@@ -115,6 +123,7 @@ export const ShowInfosProvider = ({
   divisaoNova6A: Promise<Divisao>;
   divisaoNova6B: Promise<Divisao>;
   divisaoNova7: Promise<Divisao>;
+  saveCoords: (coords: WriteCoordinatesParams) => Promise<void>;
 }>) => {
   const [data, setData] = useState<Array<Counter>>([]);
   const [menData, setMenData] = useState<Array<Dianteira>>([]);
@@ -282,7 +291,9 @@ export const ShowInfosProvider = ({
         anciaosPorCongregacao,
         servosPorCongregacao,
 
-        editable: params.get('editable') === 'true',
+        editable: params.get('editable'),
+
+        saveCoords,
       }}
     >
       {children}

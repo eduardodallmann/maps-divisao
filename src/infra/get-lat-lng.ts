@@ -1,5 +1,6 @@
 import type { Address } from './types';
 
+/**@deprecated */
 export async function getLatLng({
   street,
 }: {

@@ -14,6 +14,7 @@ import {
 import { GoogleMapsContext, useMapsLibrary } from '@vis.gl/react-google-maps';
 
 import { useShowInfos } from '~/hooks/use-show-infos';
+import type { CongregacaoName } from '~/infra/types';
 
 type PolygonEventProps = {
   onClick?: (e: google.maps.MapMouseEvent) => void;
@@ -29,7 +30,8 @@ type PolygonCustomProps = {
    * this is an encoded string for the path, will be decoded and used as a path
    */
   encodedPaths?: string[];
-  congregacao: string;
+  congregacao: CongregacaoName;
+  editor: string | null;
 };
 
 export type PolygonProps = google.maps.PolygonOptions &
@@ -46,6 +48,7 @@ function usePolygon(props: PolygonProps) {
     onDragEnd,
     onMouseOver,
     onMouseOut,
+    editor,
     encodedPaths,
     congregacao,
     ...polygonOptions
@@ -62,7 +65,7 @@ function usePolygon(props: PolygonProps) {
   });
 
   const geometryLibrary = useMapsLibrary('geometry');
-  const { setDivisaoNova } = useShowInfos();
+  const { version, saveCoords, setDivisaoNova } = useShowInfos();
   const polygon = useRef(new google.maps.Polygon()).current;
   // update PolygonOptions (note the dependencies aren't properly checked
   // here, we just assume that setOptions is smart enough to not waste a
@@ -143,6 +146,24 @@ function usePolygon(props: PolygonProps) {
     const array = polygon.getPath().getArray();
     // eslint-disable-next-line no-console
     console.log(array.map((v) => `${v.toJSON().lng},${v.toJSON().lat}`));
+
+    const sheetNameObj = {
+      old: 'DivisaoAtual',
+      new6A: `DivisaoNova6A${editor}`,
+      new6B: `DivisaoNova6B${editor}`,
+      new7: `DivisaoNova7${editor}`,
+    };
+    if (editor) {
+      saveCoords({
+        sheetName: sheetNameObj[version],
+        congregation: congregacao,
+        values: array.map((v) => ({
+          lat: v.toJSON().lat,
+          lng: v.toJSON().lng,
+        })),
+      });
+    }
+
     setDivisaoNova((prev) => ({
       ...prev,
       [congregacao]: array.map((v) => ({

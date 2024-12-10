@@ -9,6 +9,7 @@ import {
   type Dianteira,
   type Divisao,
   type Privilegio,
+  type WriteCoordinatesParams,
 } from './types';
 
 export async function getStreetsData() {
@@ -135,14 +136,15 @@ export async function getMenData() {
 
 export async function getDivisaoData(
   versao: 'old' | 'new6A' | 'new6B' | 'new7',
+  editor = '',
 ) {
   const apiKey = process.env.API_KEY;
   const spreadsheetId = process.env.SPREADSHEET_ID;
   const sheetNameObj = {
     old: 'DivisaoAtual',
-    new6A: 'DivisaoNova6A',
-    new6B: 'DivisaoNova6B',
-    new7: 'DivisaoNova7',
+    new6A: `DivisaoNova6A${editor}`,
+    new6B: `DivisaoNova6B${editor}`,
+    new7: `DivisaoNova7${editor}`,
   };
   const sheetName = sheetNameObj[versao];
   const dados: Divisao = {
@@ -226,6 +228,37 @@ export async function writeStreetsCoordinates({
     valueInputOption: 'RAW',
     requestBody: {
       values: [[value]],
+    },
+  });
+}
+
+export async function writeCoordinates({
+  sheetName,
+  congregation,
+  values,
+}: WriteCoordinatesParams) {
+  const congregationColumns = {
+    [CongregacaoName.TAPAJOS]: 'A',
+    [CongregacaoName.CENTRAL]: 'B',
+    [CongregacaoName.SUL]: 'C',
+    [CongregacaoName.JARDIM_INDAIA]: 'D',
+    [CongregacaoName.NORTE]: 'E',
+    [CongregacaoName.LESTE]: 'F',
+    [CongregacaoName.OESTE]: 'G',
+  };
+  const auth = await authenticate();
+
+  //@ts-ignore
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const spreadsheetId = process.env.SPREADSHEET_ID;
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${sheetName}!${congregationColumns[congregation]}2`,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: values.map(({ lat, lng }) => [`${lng},${lat}`]),
     },
   });
 }

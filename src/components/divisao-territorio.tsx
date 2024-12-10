@@ -29,14 +29,15 @@ export function DivisaoTerritorio() {
       return (
         <Polygon
           key={congregation}
-          editable={version !== 'old' && editable}
+          editable={version !== 'old' && Boolean(editable)}
+          editor={editable}
           paths={divisao}
           fillColor={polygonColors[congregation as CongregacaoName].fillColor}
           strokeColor={
             polygonColors[congregation as CongregacaoName].strokeColor
           }
           strokeOpacity={0.6}
-          congregacao={congregation}
+          congregacao={congregation as CongregacaoName}
         />
       );
     },
