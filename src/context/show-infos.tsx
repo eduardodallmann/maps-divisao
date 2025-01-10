@@ -129,7 +129,7 @@ export const ShowInfosProvider = ({
   const [menData, setMenData] = useState<Array<Dianteira>>([]);
   const [divisaoAtual, setDivisaoAtual] = useState<Divisao>({} as Divisao);
 
-  const [version, setVersion] = useState<Version>('old');
+  const [version, setVersion] = useState<Version>('new6B');
   const [dianteira, setDianteira] = useState<boolean>(true);
   const [ruas, setRuas] = useState<boolean>(false);
   const [divisaoNova6A, setDivisaoNova6A] = useState<Divisao>({} as Divisao);
